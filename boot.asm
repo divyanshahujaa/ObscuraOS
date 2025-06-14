@@ -1,7 +1,16 @@
-ORG 0x7c00
+ORG 0
 BITS 16
 
 start:
+    cli ; clear interrupts
+    mov ax, 0x7c0
+    mov ds, ax ; data segment
+    mov es, ax ; extra segment
+    mov ax, 0x7c00;
+    mov ss, ax
+    mov sp, 0
+    
+    sti ; enable interrupts
     mov si, message
     call print
     jmp $
