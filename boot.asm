@@ -2,13 +2,27 @@ ORG 0x7c00
 BITS 16
 
 start:
-    mov ah, 0eh  /* command to print */
-    mov ax, 'A' /* arguement to print */
-    mov bx, 0 /* set page no. */
-    int 0x10 /* interrupt(vudeo teletype output) */
-
+    mov si, message
+    call print
     jmp $
 
+print:
+    mov bx, 0
+.loop:
+    lodsb
+    cmp al, 0
+    je .done
+    call print_char
+    jmp .loop
+.done:
+    ret
 
-times 510- ($ - $$) db 0  /* Pads the rest of the boot sector with zeros so that the total size becomes exactly 510 bytes */
-dw 0xAA55 /* intel machines are little endian */
+print_char:
+    mov ah, 0eh
+    int 0x10
+    ret
+
+message: db 'Hello World!', 0
+
+times 510-($ - $$) db 0
+dw 0xAA55
